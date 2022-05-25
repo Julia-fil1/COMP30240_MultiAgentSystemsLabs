@@ -1,0 +1,17 @@
+agent Main {
+  module System system;
+
+  rule +!main(list args) {
+    system.createAgent("server", "BeerServer");
+    system.createAgent("beerDrinker", "BeerDrinker");
+    system.createAgent("teaDrinker", "BeerDrinker");
+    system.createAgent("coffeeDrinker", "BeerDrinker");
+    system.createAgent("juiceDrinker", "BeerDrinker");
+    system.createAgent("nonDrinker", "BeerDrinker");
+    system.setMainGoal("beerDrinker", ["server", "Beer"]);
+    system.setMainGoal("teaDrinker", ["server", "Tea"]);
+    system.setMainGoal("coffeeDrinker", ["server", "Coffee"]);
+    system.setMainGoal("juiceDrinker", ["server", "Juice"]);
+    system.setMainGoal("nonDrinker", ["server", "Water"]);
+  }
+}

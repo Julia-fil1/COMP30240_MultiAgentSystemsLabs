@@ -1,0 +1,51 @@
+agent Main {
+    module Console console;
+
+    types main {
+        formula switch(string);
+        formula light(string);
+        formula transition(string, string);
+    }
+
+    initial switch("off");
+    initial light("off");
+    initial transition("off", "on");
+    initial transition("on", "off");
+
+
+    rule +switch(string s) {
+        console.println("switch called before the light is called " + "state of the switch " + s);
+        !light(s);
+        console.println("switch " + "state of the switch " + s);
+    }
+
+    rule +!light(string s) : transition(string r, s) & light(r) {
+        console.println("Light before is: " + r);
+        -light(r);
+        console.println("Deleted the light " + r + "state");
+        +light(s);
+        console.println("Light is: " + s);
+    }
+
+    rule +!light(string s) {
+        console.println("light state: " + s + " the state is already what we want, do nothing");
+    }
+
+    rule +!switch(string s) : switch(string r) {
+        console.println("the goal of the switch is not what we want, need to change it");
+        -switch(r);
+        +switch(s);
+    }
+
+    rule +!switch(string s) {
+        console.println("switch state: in case the state is s do nothing");
+    }
+
+    rule +!main(list args){
+        -switch("off");
+        console.println("main: switch state is going to be changed to on");
+        +switch("on");
+        console.println("main: switch state was just changed to on");
+     }
+
+}

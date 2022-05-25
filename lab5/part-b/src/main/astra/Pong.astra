@@ -1,0 +1,15 @@
+agent Pong extends PingPong {
+  module Console console;
+
+  rule +!main(list target) {
+    forall(string name : target) {
+        send(request, name, ping());
+    }
+  }
+  
+  rule @message(inform, string sender, pong()) {
+    console.println("pong");
+    system.sleep(500);
+    send(request, sender, ping());
+  }
+}

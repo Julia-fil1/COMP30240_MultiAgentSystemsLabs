@@ -1,0 +1,25 @@
+agent Pong extends PingPong {
+  types pong {
+    formula subscriber(string, string);
+  }
+
+  rule @message(inform, string sender, pong()) {
+  foreach (subscriber("main", string name)) {
+    send(inform, name, alive(sender));
+  }
+    console.println("pong");
+    system.sleep(500);
+    send(request, sender, ping());
+  }
+
+    // the ping agent trying to subscribe is already a subscriber
+    rule @message(subscribe, string sender, monitor(string name)) : subscriber("main", name) {
+      +subscriber(sender, name);
+    }
+
+    rule @message(subscribe, string sender, monitor(string name)) {
+      +subscriber(sender, name);
+      send(agree, name, monitor(name));
+    }
+
+    }

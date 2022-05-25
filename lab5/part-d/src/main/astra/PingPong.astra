@@ -1,0 +1,14 @@
+agent PingPong {
+    types pp {
+        formula ping();
+        formula pong();
+
+        // records who subscribed and for what agent, takes name of Ping agent as argument
+        formula monitor(string);
+
+        formula alive(string);
+    }
+
+    module Console console; 
+    module System system;
+}

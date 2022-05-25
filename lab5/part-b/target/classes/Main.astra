@@ -1,0 +1,20 @@
+agent Main {
+  module System system;
+  module Console console;
+
+  rule +!main(list args) {
+      int numAgents = 0;
+      list L= [];
+      while (numAgents < 10) {
+        string a = "ping" + numAgents;
+        system.createAgent(a, "Ping");
+        console.println(a);
+        L = L + [a];
+        numAgents = numAgents + 1;
+      }
+      console.println("List is: " + L);
+      system.createAgent("pong", "Pong");
+      system.setMainGoal("pong", L);
+
+  }
+}

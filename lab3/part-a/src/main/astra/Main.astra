@@ -1,0 +1,11 @@
+agent Main {
+    module Console console;
+    module System s;
+
+    initial !init("Julia");
+
+    rule +!init(string name) {
+        console.println("Hello, " + name + "!");
+        s.exit();
+    }
+}

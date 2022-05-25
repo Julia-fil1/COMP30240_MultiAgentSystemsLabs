@@ -1,0 +1,69 @@
+agent Main {
+    module Console console;
+    module System system;
+
+    types main {
+        formula switch(string);
+        formula light(string);
+        formula transition(string, string);
+        formula flash(int);
+    }
+
+    initial switch("off");
+    initial light("off");
+    initial transition("off", "on");
+    initial transition("on", "off");
+
+
+    rule +switch(string s) {
+        console.println("switch called before the light is called " + "state of the switch " + s);
+        !light(s);
+        console.println("switch: " + "state of the switch " + s);
+    }
+
+    rule +!light(string s) : transition(string r, s) & light(r) {
+        console.println("Light before is: " + r);
+        -light(r);
+        console.println("Deleted the light " + r + "state");
+        +light(s);
+        console.println("Light is: " + s);
+    }
+
+    rule +!light(string s) {
+        console.println("light state: " + s + " the state is already what we want, do nothing");
+    }
+
+    rule +!switch(string s) : switch(string r) {
+        console.println("the goal of the switch is not what we want, need to change it");
+        -switch(r);
+        +switch(s);
+    }
+
+    rule +!switch(string s) {
+        console.println("switch state: in case the state is s do nothing");
+    }
+
+    rule +!flash(int X) : X > 0 {
+        !switch("on");
+        console.println("flash: confirming the light should be on and it is: ");
+        console.println("flash: starting flash, light is on, can start flashing");
+        system.sleep(2000);
+        console.println("flash: waited 2 seconds now will turn the light off");
+        !switch("off");
+        system.sleep(2000);
+        console.println("flash: waited 2 seconds after light was off");
+        console.println("flash: this was iteration number: " + X);
+        !flash(X-1);
+    }
+
+    rule +!flash(int X) : X == 0 {
+        console.println("flash: flashing completed, exiting the program");
+        system.exit();
+    }
+
+    rule +!main(list args){
+        console.println("main: calling the flash function, the update of switches and lights should also be triggered");
+        !flash(10);
+     }
+
+}

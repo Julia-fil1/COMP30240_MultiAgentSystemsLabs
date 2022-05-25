@@ -1,0 +1,25 @@
+agent Ping extends PingPong {
+  types ping {
+    formula subscribed(string, string);
+  }
+
+
+  rule @message(agree, string sender, monitor(string name)) {
+    +subscribed(sender, name);
+    send(request, system.name(), ping());
+  }
+
+  // informing pong that the request has been
+  rule @message(request, string sender, ping()) {
+    console.println("ping");
+    system.sleep(500);
+    send(inform, "pong", pong());
+
+  }
+
+  rule @message(inform, string sender, alive(string name)) {
+      console.println("The agent: " + name + " is alive");
+    }
+
+
+}

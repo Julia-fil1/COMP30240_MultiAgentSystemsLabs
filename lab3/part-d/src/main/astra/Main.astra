@@ -1,0 +1,50 @@
+agent Main {
+    module Console console;
+    module System system;
+
+    types main {
+        formula switch(string);
+        formula light(string);
+        formula transition(string, string);
+        formula flash();
+    }
+
+    initial switch("off");
+    initial light("off");
+    initial transition("off", "on");
+    initial transition("on", "off");
+
+
+    rule +switch(string s) {
+        !light(s);
+    }
+
+    rule +!light(string s) : transition(string r, s) & light(r) {
+        -light(r);
+        +light(s);
+        console.println("Light is: " + s);
+    }
+
+    rule +!light(string s) {
+    }
+
+    rule +!switch(string s) : switch(string r) {
+        -switch(r);
+        +switch(s);
+    }
+
+    rule +!switch(string s) {
+    }
+
+    rule +!flash() {
+        !switch("on");
+        system.sleep(2000);
+        !switch("off");
+        system.sleep(2000);
+    }   
+
+    rule +!main(list args) {
+        !flash();
+     }
+
+}

@@ -1,0 +1,27 @@
+agent Main {
+  types pingpong {
+    formula monitor(string);
+    formula subscribed(string, string);
+  }
+
+  module System system;
+  module Console console;
+
+
+  rule +!main(list args) {
+      int numAgents = 0;
+      list L= [];
+      system.createAgent("pong", "Pong");
+      while (numAgents < 10) {
+        string a = "ping" + numAgents;
+        system.createAgent(a, "Ping");
+        send(subscribe, "pong", monitor(a));
+        L = L + [a];
+        numAgents = numAgents + 1;
+      }
+
+
+
+  }
+
+}
